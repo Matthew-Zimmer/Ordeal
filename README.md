@@ -14,7 +14,7 @@ Put your codebase through an **Ordeal** by testing.
 
 ## Install
 ```
-$ git clone https://github.com/username/software-project.git
+$ git clone https://github.com/Matthew-Zimmer/Ordeal.git
 $ mkdir -p Ordeal/Build && cd Ordeal/build
 $ cmake .. && sudo make install
 ```
@@ -40,7 +40,7 @@ public:
 	auto Run(Test<1>)// This will run second
 	{
 		return Status{ "fail", 
-			My_Value{ 1 + 2 } == Correct_Value{ 2 } };//This wil fail
+			My_Value{ 1 + 2 } == Correct_Value{ 2 } };//This will fail
 	}
 }
 
