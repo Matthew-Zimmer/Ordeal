@@ -22,7 +22,7 @@ $ cmake .. && sudo make install
 ## Usage
 ```
 //Tests.cpp
-#include <Ordeal/Ordeal.hpp>
+#include <ordeal/Ordeal.hpp>
 
 using namespace Ordeal;
 
@@ -45,7 +45,7 @@ public:
 }
 
 //Main.cpp
-#include <Ordeal/Ordeal.hpp>
+#include <ordeal/Ordeal.hpp>
 
 int main(int argc, char** argv)
 {
