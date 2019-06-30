@@ -4,6 +4,6 @@ Target_Include_Directories(ordeal INTERFACE
 
 #TODO: Fill in .hpp Files
 Set(Headers 
-	Testing.hpp)
+	Ordeal.hpp)
 
 Install(FILES ${Headers} DESTINATION include/ordeal)
