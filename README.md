@@ -14,8 +14,8 @@ Put your codebase through an **Ordeal** by testing.
 
 ## Install
 ```
-$ git clone https://github.com/Matthew-Zimmer/Ordeal.git
-$ mkdir -p Ordeal/bin && cd Ordeal/bin
+$ git clone https://github.com/Matthew-Zimmer/ordeal.git
+$ mkdir -p ordeal/bin && cd ordeal/bin
 $ cmake .. && sudo make install
 ```
 
