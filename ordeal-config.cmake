@@ -1,2 +1,2 @@
-Get_Filename_Component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-Include(${SELF_DIR}/ordeal.cmake)
+get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(${SELF_DIR}/ordeal.cmake)

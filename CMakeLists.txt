@@ -1,15 +1,19 @@
-CMake_Minimum_Required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.13)
 
-Project(ordeal)
+project(ordeal)
 
-Add_Library(ordeal INTERFACE)
-Target_Compile_Features(ordeal INTERFACE cxx_std_17)
-Add_Executable(test "")
+add_library(ordeal)
+Add_executable(ordeal_test "")
 
-Add_Subdirectory(src)
-Add_Subdirectory(include)
-Add_Subdirectory(tests)
+add_subdirectory(src)
+add_subdirectory(include)
+add_subdirectory(test)
 
-Install(TARGETS ordeal EXPORT ordeal DESTINATION lib/ordeal)
-Install(EXPORT ordeal DESTINATION lib/ordeal)
-Install(FILES ordeal-config.cmake DESTINATION lib/ordeal)
+target_compile_features(ordeal PUBLIC cxx_std_17)
+target_compile_features(ordeal_test PUBLIC cxx_std_17)
+
+set(CMAKE_CXX_FLAGS "-fmax-errors=1")
+
+install(TARGETS ordeal EXPORT ordeal DESTINATION lib/ordeal)
+install(EXPORT ordeal DESTINATION lib/)
+install(FILES ordeal-config.cmake DESTINATION lib/ordeal)

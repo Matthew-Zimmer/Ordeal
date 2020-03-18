@@ -1,9 +1,11 @@
-Target_Include_Directories(ordeal INTERFACE 
+target_include_directories(ordeal PUBLIC 
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> 
 	$<INSTALL_INTERFACE:include/ordeal>)
 
-#TODO: Fill in .hpp Files
-Set(Headers 
-	Ordeal.hpp)
+target_include_directories(ordeal_test PUBLIC 
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>)
 
-Install(FILES ${Headers} DESTINATION include/ordeal)
+set(headers 
+	ordeal.hpp)
+
+install(FILES ${headers} DESTINATION include/ordeal)
