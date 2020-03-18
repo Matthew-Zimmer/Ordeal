@@ -15,5 +15,5 @@ target_compile_features(ordeal_test PUBLIC cxx_std_17)
 set(CMAKE_CXX_FLAGS "-fmax-errors=1")
 
 install(TARGETS ordeal EXPORT ordeal DESTINATION lib/ordeal)
-install(EXPORT ordeal DESTINATION lib/)
+install(EXPORT ordeal DESTINATION lib/ordeal)
 install(FILES ordeal-config.cmake DESTINATION lib/ordeal)

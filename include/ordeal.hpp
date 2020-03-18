@@ -1,9 +1,10 @@
 #pragma once
 #include <functional>
 #include <memory>
+#include <numeric>
+#include <ostream>
 #include <string>
 #include <vector>
-#include <ostream>
 
 #include <reflection/reflection.hpp>
 #include <reflection/variables.hpp>
@@ -57,10 +58,21 @@ namespace Slate::Detail::Ordeal
         template <typename Object, typename Type>
         class Is_Valid_Test<Object, Type, std::void_t<decltype(std::declval<Object>().run(Type{}))>> : public std::true_type
         {};
+
+        template <typename Type, typename=void>
+        class Is_Container : public std::false_type
+        {};
+
+        template <typename Type>
+        class Is_Container<Type, std::void_t<decltype(std::declval<Type>().begin(), std::declval<Type>().end())>> : public std::true_type
+        {};
     }
 
     template <typename Object, typename Type>
     constexpr bool is_valid_test = Detail::Is_Valid_Test<Object, Type>::value;
+
+    template <typename Type>
+    constexpr bool is_container = Detail::Is_Container<Type>::value;
 }
 
 
@@ -83,8 +95,25 @@ namespace Slate::Ordeal
         };
     }
 
-    template <typename>
-    class Expected_Value;
+    template <typename Type>
+    class Value;
+
+    template <typename Type>
+    class Expected_Value : public Is<Expected_Value<Type>, Variables<V::Value<Type>>>
+    {
+        std::optional<Type> delta;
+        template <typename U, typename V>
+        friend Test_Result operator==(Value<U> const& x, Expected_Value<V> const& y);
+    public:
+        Expected_Value(Type const& value) : Is<Expected_Value<Type>, Variables<V::Value<Type>>>{ V::Value<Type>{ value } }
+        {}
+
+        Expected_Value& within(Type const& delta)
+        {
+            this->delta = delta;
+            return *this;
+        }
+    };
 
     template <typename Type>
     class Value : public Is<Value<Type>, Variables<V::Value<Type>>>
@@ -92,26 +121,35 @@ namespace Slate::Ordeal
     public:
         Value(Type const& value) : Is<Value<Type>, Variables<V::Value<Type>>>{ V::Value<Type>{ value } }
         {}
-        template <typename T>
-        friend Test_Result operator==(Value const& x, Expected_Value<T> const& y)
+
+        template <typename Pred>
+        auto expects(Pred&& cond)
         {
-            return Test_Result{ x.value() == y.value() };
+            if constexpr (Detail::Ordeal::is_container<Type>)
+                return std::accumulate(this->value().begin(), this->value().end(), true, [&](bool r, auto const& x){ return r && cond(x); });
+            else
+                return cond(this->value());
         }
-        
-        template <typename T>
-        friend Test_Result operator==(Expected_Value<T> const& y, Value const& x)
-        {
-            return x == y;
-        }
+
+        template <typename U, typename V>
+        friend Test_Result operator==(Value<U> const& x, Expected_Value<V> const& y);
     };
 
-    template <typename Type>
-    class Expected_Value : public Is<Expected_Value<Type>, Variables<V::Value<Type>>>
+    template <typename U, typename V>
+    Test_Result operator==(Value<U> const& x, Expected_Value<V> const& y)
     {
-    public:
-        Expected_Value(Type const& value) : Is<Value<Type>, Variables<V::Value<Type>>>{ V::Value<Type>{ value } }
-        {}
-    };
+        if (y.delta)
+            return x.value() >= y.value() - y.delta.value() && x.value() <= y.value() + y.delta.value();
+        else
+            return x.value() == y.value();
+    }
+
+    template <typename U, typename V>
+    Test_Result operator==(Expected_Value<U> const& x, Value<V> const& y)
+    {
+        return y == x;
+    }
+        
 
     Test_Result operator""_name(char const* str, std::size_t count);
 
